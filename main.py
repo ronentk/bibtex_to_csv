@@ -7,16 +7,16 @@ parser = bibtex.Parser()
 bibdata = parser.parse_file("Lib.bib")
 
 data_list = [
-        ["Title", "Year", "Authors"]
+        ["Title", "Year", "Authors", "URL"]
     ]
 
 # loop through the individual references
 for bib_id in bibdata.entries:
     b = bibdata.entries[bib_id].fields
     entry = []
-    
+
     try:
-        entry.append(b["title"])
+        entry.append(b["title"].replace("}", "").replace("{", ""))
         entry.append(b["year"])
 
         # deal with multiple authors
@@ -26,8 +26,9 @@ for bib_id in bibdata.entries:
             last_names = ' '.join(author.last_names)
             full_name = first_names + ' ' + last_names
             authors.append(full_name)
-        
+
         entry.append(', '.join(authors))
+        entry.append(b.get("url", "n/a"))
         data_list.append(entry)
 
     # field may not exist for a reference
